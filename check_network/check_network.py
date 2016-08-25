@@ -42,7 +42,7 @@ def main():
     (destination, ip_port) = module.params['link'].split(':')
     if check_flux(destination, ip_port) == 0:
         module.exit_json()
-    module.fail_json(msg="port %s is not opened on %s" % (ip_port, destination))
+    module.fail_json(msg="%s is not reachable on port %s" % (destination, ip_port), error=True)
 
 
 from ansible.module_utils.basic import *

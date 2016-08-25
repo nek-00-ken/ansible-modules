@@ -1,0 +1,32 @@
+---
+
+- hosts: server-1
+  gather_facts: True
+  become: yes
+  tasks:
+    - name: stop service nginx
+      service:
+        name: nginx
+        state: stopped
+    - name: uninstall nginx
+      apt:
+        name: nginx
+        state: absent
+    - name: TEST 1 - check that port 80 is DOWN
+      check_network:
+        link: localhost:80
+      register: result
+      failed_when: result.error is not defined
+    - name: install nginx
+      apt:
+        name: nginx
+        state: present
+    - name: start service nginx
+      service:
+        name: nginx
+        state: started
+    - name: TEST 2 - check that port 80 is UP
+      check_network:
+        link: localhost:80
+      register: result
+      failed_when: result.error is defined
